@@ -5,14 +5,6 @@ blueprint:
     Dim it up/down (depending on it's current state) by holding the same button.
   domain: automation
   input:
-    button:
-      name: Push button
-      description:
-        Entity representing a physical push button (which restores its position
-        when released). It must emit a square signal on press.
-      selector:
-        entity:
-          domain: binary_sensor
     light:
       name: Light
       selector:
@@ -75,7 +67,7 @@ mode: single
 
 trigger:
   - platform: state
-    entity_id: !input button
+    entity_id: !input light
     to: "on"
 
 action:
@@ -86,7 +78,7 @@ action:
       light: !input light
   - wait_for_trigger:
       - platform: state
-        entity_id: !input button
+        entity_id: !input light
         to: "off"
         from: "on"
     timeout: !input hold_threshold
@@ -112,7 +104,7 @@ action:
                         - condition: and
                           conditions:
                             - condition: state
-                              entity_id: !input button
+                              entity_id: !input light
                               state: "on"
                             - condition: template
                               value_template: "{{ (state_attr(light, 'brightness') or 0) > 0 }}"
@@ -141,7 +133,7 @@ action:
                     - condition: and
                       conditions:
                         - condition: state
-                          entity_id: !input button
+                          entity_id: !input light
                           state: "on"
                         - condition: template
                           value_template: "{{ (state_attr(light, 'brightness') or 0) < 255 }}"
